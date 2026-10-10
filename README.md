@@ -42,4 +42,4 @@ database.default.port = 3306
 | /users | User accounts (from MySQL via UserModel) |
 
 ## Live Demo
-(add hosted link here once it's live)
+Not required for this activity (TFA 2). Run locally using the steps above.
