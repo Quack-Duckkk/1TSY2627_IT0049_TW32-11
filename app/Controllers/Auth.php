@@ -9,7 +9,6 @@ class Auth extends BaseController
     // Show the login form
     public function login()
     {
-        // Already logged in? No need to see the form again.
         if (session()->get('isLoggedIn')) {
             return redirect()->to('/customers');
         }
@@ -20,7 +19,6 @@ class Auth extends BaseController
     // Handle the form submit
     public function attempt()
     {
-        // 1. Validate first (same habit as TFA3)
         $rules = [
             'username' => 'required',
             'password' => 'required',
@@ -33,17 +31,16 @@ class Auth extends BaseController
         $username = $this->request->getPost('username');
         $password = $this->request->getPost('password');
 
-        // 2. Find the user by username
         $user = (new UserModel())->where('username', $username)->first();
 
-        // 3. Verify the password against the stored hash
         if ($user === null || ! password_verify($password, $user['password'] ?? '')) {
             return redirect()->back()->withInput()
                 ->with('error', 'Invalid username or password.');
         }
 
-        // 4. Success: start the session (small identifiers only!)
-        session()->regenerate();
+        // Create a new session ID and remove the old one.
+        session()->regenerate(true);
+
         session()->set([
             'isLoggedIn' => true,
             'user_id'    => $user['id'],
@@ -54,7 +51,7 @@ class Auth extends BaseController
             ->with('message', 'Welcome back, ' . $user['username'] . '!');
     }
 
-    // Log out: wipe the whole session
+    // We will convert this to POST after checking the navigation view.
     public function logout()
     {
         session()->destroy();

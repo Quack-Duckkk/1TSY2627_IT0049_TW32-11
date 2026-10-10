@@ -3,6 +3,14 @@
 <?= $this->section('content') ?>
     <h1>User Accounts</h1>
 
+    <?php if (session()->getFlashdata('success')): ?>
+        <p style="color: green;"><?= esc(session()->getFlashdata('success')) ?></p>
+    <?php endif; ?>
+
+    <?php if (session()->getFlashdata('error')): ?>
+        <p style="color: red;"><?= esc(session()->getFlashdata('error')) ?></p>
+    <?php endif; ?>
+
     <p><a href="<?= site_url('users/new') ?>">+ Add User</a></p>
 
     <table>
@@ -20,7 +28,17 @@
                     <td><img src="<?= esc($avatarUrl) ?>" alt="Avatar" width="50" height="50" style="border-radius:50%; object-fit:cover;"></td>
                     <td><?= esc($user['username']) ?></td>
                     <td><?= esc($user['full_name']) ?></td>
-                    <td><a href="<?= site_url('users/' . $user['id'] . '/edit') ?>">Edit</a></td>
+                    <td>
+                        <a href="<?= site_url('users/' . $user['id'] . '/edit') ?>">Edit</a>
+
+                        <form action="<?= site_url('users/' . $user['id'] . '/delete') ?>"
+                              method="post"
+                              style="display:inline;"
+                              onsubmit="return confirm('Delete <?= esc($user['username'], 'js') ?>? This can\'t be undone.');">
+                            <?= csrf_field() ?>
+                            <button type="submit">Delete</button>
+                        </form>
+                    </td>
                 </tr>
             <?php endforeach; ?>
         </tbody>
