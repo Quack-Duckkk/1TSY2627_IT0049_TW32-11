@@ -11,7 +11,6 @@
                 <tr>
                     <td><?= esc($user['username']) ?></td>
                     <td><?= esc($user['full_name']) ?></td>
-                    <td><?= esc($user['role']) ?></td>
                 </tr>
             <?php endforeach; ?>
         </tbody>
